@@ -102,8 +102,15 @@ class Request extends Context
                 $this->getProperty('queue_nowait'),
                 $this->getProperty('queue_properties')
             );
-
-            $this->channel->queue_bind($queue ?: $this->queueInfo[0], $exchange, $this->getProperty('routing'));
+            $routing = $this->getProperty('routing');
+            if(is_array($routing)){
+                foreach ($routing as $key => $value) {
+                    $this->channel->queue_bind($queue ?: $this->queueInfo[0], $exchange, $value);
+                }
+            }else{
+                $this->channel->queue_bind($queue ?: $this->queueInfo[0], $exchange, $this->getProperty('routing'));
+            }
+            
 
         }
 
